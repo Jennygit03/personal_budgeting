@@ -1,20 +1,18 @@
 <?php
 session_start();
 
-// After successful login
-$_SESSION['user_id'] = $row['user_id'];
-$_SESSION['username'] = $row['username'];
-
 // Check if user is logged in
 if (!isset($_SESSION['user_id']) || !is_numeric($_SESSION['user_id'])) {
     header("Location: signin.html");
     exit();
 }
 
+// Database connection
 $conn = new mysqli('mysql', 'root', 'root', 'budgeting_db');
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
+
 $user_id = $_SESSION['user_id'];
 
 // Get user info
@@ -43,3 +41,16 @@ $conn->close();
 $income = $income ?? 0;
 $expenses = $expenses ?? 0;
 ?>
+
+<!-- start HTML -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Budget Dashboard</title>
+</head>
+<body>
+  <h1>Welcome, <?php echo htmlspecialchars($username); ?></h1>
+  <p>Total Income: $<?php echo number_format($income, 2); ?></p>
+  <p>Total Expenses: $<?php echo number_format($expenses, 2); ?></p>
+</body>
+</html>
